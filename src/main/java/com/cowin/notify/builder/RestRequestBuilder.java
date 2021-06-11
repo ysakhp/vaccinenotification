@@ -33,19 +33,22 @@ public class RestRequestBuilder {
 		
 		List<Center> centers = null;
 		try {
-			log.info("RestRequestBuilder url :"+url);
+			
 			
 			HttpHeaders headers = new HttpHeaders();
 			 headers.add("user-agent", "Application");
 			 HttpEntity<CenterList> entity = new HttpEntity<>(headers);
-
+			 log.info("RestRequest invoking");
 			 CenterList centerList = restTemplate.exchange(url, HttpMethod.GET, entity, CenterList.class).getBody();
 			 log.info("Details fetched from external API "+centerList);
 			
 //			CenterList res = restTemplate.getForObject(url, CenterList.class);
 			centers =  centerList.getCenters();
 		} catch (RestClientException e) {
-			
+			log.error("Rest Client Exception "+e.getMessage());
+			e.printStackTrace();
+		}catch (Exception e) {
+			log.error("Ecxeption in RestBuilder "+ e.getMessage());
 			e.printStackTrace();
 		}
 		return centers;
