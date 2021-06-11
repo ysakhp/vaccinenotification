@@ -61,7 +61,7 @@ public class RestRequestBuilder {
 	public boolean checkGetRequest() {
 		log.info("RestRequest invoking");
 		
-		String url = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?pincode=690107&date=12-06-2021";
+		String url = "http://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?pincode=690107&date=12-06-2021";
 		boolean flag = false;
 		HttpHeaders headers = new HttpHeaders();
 //		headers.add("user-agent", "Application");
@@ -78,5 +78,24 @@ public class RestRequestBuilder {
 		}
 		return flag;
 	}
+	
+	public boolean checkGetRequestNew() {
+		log.info("RestRequest invoking");
+		
+		String url = "http://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?pincode=690107&date=12-06-2021";
+		boolean flag = false;
+		/*
+		 * CloseableHttpClient httpClient = HttpClients.custom()
+		 * .setSSLHostnameVerifier(new NoopHostnameVerifier()) .build();
+		 * HttpComponentsClientHttpRequestFactory requestFactory = new
+		 * HttpComponentsClientHttpRequestFactory();
+		 * requestFactory.setHttpClient(httpClient); try { restTemplate.exchange(url,
+		 * HttpMethod.GET, entity, String.class).getBody(); log.info("second");
+		 * restTemplate.getForObject(url, String.class); log.info("final"); }
+		 * catch(Exception e){ e.printStackTrace(); }
+		 */
+		return flag;
+	}
+	
 
 }
