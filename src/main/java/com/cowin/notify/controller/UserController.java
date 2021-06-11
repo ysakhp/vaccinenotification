@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cowin.notify.builder.RestRequestBuilder;
 import com.cowin.notify.model.User;
 import com.cowin.notify.service.UserService;
 
@@ -21,6 +22,9 @@ public class UserController {
 	
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	RestRequestBuilder restRe;
 	
 	@PostMapping("/")
 	public User addUser(@RequestBody User user) {
@@ -37,4 +41,8 @@ public class UserController {
 		userService.deleteUser(userId);
 	}
 
+	@GetMapping("/check")
+	public Boolean checkRest() {
+		return restRe.checkGetRequest();
+	}
 }
