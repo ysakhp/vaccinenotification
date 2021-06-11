@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -37,6 +38,7 @@ public class RestRequestBuilder {
 			
 			HttpHeaders headers = new HttpHeaders();
 			 headers.add("user-agent", "Application");
+			 headers.setContentType(MediaType.APPLICATION_JSON);
 			 HttpEntity<CenterList> entity = new HttpEntity<>(headers);
 			 log.info("RestRequest invoking");
 			 CenterList centerList = restTemplate.exchange(url, HttpMethod.GET, entity, CenterList.class).getBody();
