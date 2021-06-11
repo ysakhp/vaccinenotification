@@ -5,6 +5,9 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -30,6 +33,14 @@ public class RestRequestBuilder {
 		List<Center> centers = null;
 		try {
 			log.info("RestRequestBuilder url :"+url);
+			
+			HttpHeaders headers = new HttpHeaders();
+			 headers.add("user-agent", "Application");
+			 HttpEntity<String> entity = new HttpEntity<>(headers);
+
+			 String re = restTemplate.exchange(url, HttpMethod.GET, entity, String.class).getBody();
+			 log.info("center Checking"+re);
+			
 			CenterList res = restTemplate.getForObject(url, CenterList.class);
 			centers = res.getCenters();
 		} catch (RestClientException e) {
