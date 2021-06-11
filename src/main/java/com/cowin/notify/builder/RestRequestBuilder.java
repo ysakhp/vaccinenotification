@@ -64,11 +64,14 @@ public class RestRequestBuilder {
 		String url = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?pincode=690107&date=12-06-2021";
 		boolean flag = false;
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("user-agent", "Application");
+//		headers.add("user-agent", "Application");
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<CenterList> entity = new HttpEntity<>(headers);
+		HttpEntity<String> entity = new HttpEntity<>(headers);
 		try {
-		restTemplate.exchange(url, HttpMethod.GET, entity, CenterList.class).getBody();
+		restTemplate.exchange(url, HttpMethod.GET, entity, String.class).getBody();
+		log.info("second");
+		 restTemplate.getForObject(url, String.class);
+		 log.info("final");
 		}
 		catch(Exception e){
 			e.printStackTrace();
