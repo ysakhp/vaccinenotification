@@ -38,23 +38,19 @@ public class UserScheduler {
 
 	Logger log = LoggerFactory.getLogger(UserScheduler.class);
 
-	@Scheduled(initialDelay = 1000, fixedDelay = 1000 * 60*60)
+	@Scheduled(initialDelay = 500, fixedDelay = 1000 * 60 * 60)
 	public synchronized void scheduleGetUsers() {
-		log.info("User schedule");
+		log.info("User scheduler start");
 		Future userFuture = executorService.submit(userWorker);
 		try {
-			log.info("User Detailes Fetched" + userFuture.isDone());
+
+			users = (Vector<User>) userFuture.get();
 
 			log.info("User Fetched completely in future");
 
-			users = (Vector<User>) userFuture.get();
-			/*
-			 * Thread t1 = new Thread(userWorker); t1.setName("User Thread"); t1.start();
-			 */
-
 			restAPIWorker.setUsers(users);
-//			Future restAPIFuture = executorService.submit(restAPIWorker);
-//			restAPIThread.requestAPI(users);
+
+			log.info("User scheduler ends");
 
 		} catch (InterruptedException e) {
 			log.info("Interrupted");
@@ -65,30 +61,15 @@ public class UserScheduler {
 		}
 	}
 
-	@Scheduled(fixedDelay = 1000*15)
+	@Scheduled(fixedDelay = 1000 * 15)
 	public void scheduleResAPICallForUser() {
-		
-		log.info("Rest API CALL");
-		
+
+		log.info("External Cowin Rest API CALL Scheduler starts. ");
+
 		Future restAPIFuture = executorService.submit(restAPIWorker);
-		
-		
-		/*
-		 * log.info("User " + users); users.stream().forEach(user -> {
-		 * 
-		 * 
-		 * 
-		 * 
-		 * try {
-		 * 
-		 * if ((Boolean) restAPIFuture.get() == true) { log.info("Remove USer ");
-		 * users.remove(user); }else { log.info("DOnt Rmove"+); } } catch
-		 * (InterruptedException | ExecutionException e) { e.printStackTrace(); }
-		 * 
-		 * 
-		 * });
-		 */
-		
+
+		log.info("External Cowin Rest API CALL Scheduler ends. ");
+
 	}
 
 }

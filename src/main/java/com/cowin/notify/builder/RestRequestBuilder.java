@@ -2,6 +2,7 @@ package com.cowin.notify.builder;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Vector;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,13 +37,13 @@ public class RestRequestBuilder {
 			
 			HttpHeaders headers = new HttpHeaders();
 			 headers.add("user-agent", "Application");
-			 HttpEntity<String> entity = new HttpEntity<>(headers);
+			 HttpEntity<CenterList> entity = new HttpEntity<>(headers);
 
-			 String re = restTemplate.exchange(url, HttpMethod.GET, entity, String.class).getBody();
-			 log.info("center Checking"+re);
+			 CenterList centerList = restTemplate.exchange(url, HttpMethod.GET, entity, CenterList.class).getBody();
+			 log.info("Details fetched from external API "+centerList);
 			
-			CenterList res = restTemplate.getForObject(url, CenterList.class);
-			centers = res.getCenters();
+//			CenterList res = restTemplate.getForObject(url, CenterList.class);
+			centers =  centerList.getCenters();
 		} catch (RestClientException e) {
 			
 			e.printStackTrace();
