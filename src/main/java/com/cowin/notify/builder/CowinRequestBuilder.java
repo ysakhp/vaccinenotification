@@ -17,18 +17,21 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.cowin.notify.model.Center;
 import com.cowin.notify.model.CenterList;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 
 @Service
-public class WebClientRequestBuilder {
+public class CowinRequestBuilder {
 
-	Logger log = LoggerFactory.getLogger(WebClientRequestBuilder.class);
+	Logger log = LoggerFactory.getLogger(CowinRequestBuilder.class);
 
 	private static final String COWIN_API_URL = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?";
 
-	public HttpResponse getCowinDetails(Integer pincode,String date) throws IOException, InterruptedException {
+	public CenterList getCowinDetails(Integer pincode,String date) throws IOException, InterruptedException {
 		
+		log.info("GEtting Cowin details");
 		
 		
 		
@@ -42,8 +45,16 @@ public class WebClientRequestBuilder {
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 		
 		log.info(COWIN_API_URL+"pincode="+pincode+"&date"+date+response.body().toString());
+		
+		ObjectMapper mapper = new ObjectMapper();
+		CenterList centerList = mapper.readValue(response.body(), new TypeReference<CenterList>() {
+		});
+		
+		log.info("Center List "+centerList);
+		
+		
 				
-		return response;
+		return centerList;
 	}
 
 }
