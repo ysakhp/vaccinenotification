@@ -76,7 +76,7 @@ public class RestAPIWorker implements Runnable {
 							
 								log.info("Going to send mail :"+user.getEmail()+" "+center.getName()
 								+ " on " + session.getDate());
-//								emailService.buildContent(user, center, session).notifyUser();
+								emailService.buildContent(user, center, session).notifyUser();
 								log.info("Email Sent " + user.getEmail());
 								user.setEmailSent(true);
 
