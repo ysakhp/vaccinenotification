@@ -1,5 +1,6 @@
 package com.cowin.notify.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.hibernate.annotations.Parameter;
@@ -13,8 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cowin.notify.builder.RestRequestBuilder;
+import com.cowin.notify.builder.WebClientRequestBuilder;
+import com.cowin.notify.model.Center;
 import com.cowin.notify.model.User;
 import com.cowin.notify.service.UserService;
+
+import reactor.core.publisher.Flux;
 
 @RestController
 @RequestMapping("/users")
@@ -24,7 +29,7 @@ public class UserController {
 	UserService userService;
 	
 	@Autowired
-	RestRequestBuilder restRe;
+	WebClientRequestBuilder we;
 	
 	@PostMapping("/")
 	public User addUser(@RequestBody User user) {
@@ -42,7 +47,8 @@ public class UserController {
 	}
 
 	@GetMapping("/check")
-	public Boolean checkRest() {
-		return restRe.checkGetRequest();
+	public Boolean checkRest() throws IOException, InterruptedException {
+		we.getCowinDetails(690107, "12-06-2021");
+		 return true;
 	}
 }

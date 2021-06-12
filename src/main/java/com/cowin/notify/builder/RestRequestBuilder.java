@@ -31,22 +31,22 @@ public class RestRequestBuilder {
 
 	public List<Center> buildGetRequest(int pincode, String date) {
 
-		String url = "http://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?pincode=" + pincode
+		String url = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?pincode=" + pincode
 				+ "&date=" + date;
 
 		List<Center> centers = null;
 		try {
 
 			HttpHeaders headers = new HttpHeaders();
-//			headers.add("user-agent", "Application");
+			headers.add("user-agent", "Application");
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			HttpEntity<CenterList> entity = new HttpEntity<>(headers);
-			log.info("RestRequest invoking");
-			CenterList centerList = restTemplate.exchange(url, HttpMethod.GET, entity, CenterList.class).getBody();
+			HttpEntity<String> entity = new HttpEntity<>(headers);
+			log.info("RestRequest invoking "+url);
+			String centerList = restTemplate.exchange(url, HttpMethod.GET, entity, String.class).getBody();
 			log.info("Details fetched from external API " + centerList);
 
-			CenterList res = restTemplate.getForObject(url, CenterList.class);
-			centers = centerList.getCenters();
+//			CenterList res = restTemplate.getForObject(url, CenterList.class);
+//			centers = res.getCenters();
 		} catch (RestClientException e) {
 			log.error("Rest Client Exception " + e.getMessage());
 			e.printStackTrace();
@@ -57,45 +57,5 @@ public class RestRequestBuilder {
 		return centers;
 
 	}
-
-	public boolean checkGetRequest() {
-		log.info("RestRequest invoking");
-		
-		String url = "http://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?pincode=690107&date=12-06-2021";
-		boolean flag = false;
-		HttpHeaders headers = new HttpHeaders();
-//		headers.add("user-agent", "Application");
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		HttpEntity<String> entity = new HttpEntity<>(headers);
-		try {
-		restTemplate.exchange(url, HttpMethod.GET, entity, String.class).getBody();
-		log.info("second");
-		 restTemplate.getForObject(url, String.class);
-		 log.info("final");
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}
-		return flag;
-	}
-	
-	public boolean checkGetRequestNew() {
-		log.info("RestRequest invoking");
-		
-		String url = "http://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?pincode=690107&date=12-06-2021";
-		boolean flag = false;
-		/*
-		 * CloseableHttpClient httpClient = HttpClients.custom()
-		 * .setSSLHostnameVerifier(new NoopHostnameVerifier()) .build();
-		 * HttpComponentsClientHttpRequestFactory requestFactory = new
-		 * HttpComponentsClientHttpRequestFactory();
-		 * requestFactory.setHttpClient(httpClient); try { restTemplate.exchange(url,
-		 * HttpMethod.GET, entity, String.class).getBody(); log.info("second");
-		 * restTemplate.getForObject(url, String.class); log.info("final"); }
-		 * catch(Exception e){ e.printStackTrace(); }
-		 */
-		return flag;
-	}
-	
 
 }
