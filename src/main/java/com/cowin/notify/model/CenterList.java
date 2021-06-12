@@ -3,6 +3,9 @@ package com.cowin.notify.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CenterList {
 	private List<Center> centers;
 	
