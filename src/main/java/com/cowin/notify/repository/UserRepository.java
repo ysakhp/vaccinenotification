@@ -1,4 +1,4 @@
-package com.cowin.notify;
+package com.cowin.notify.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

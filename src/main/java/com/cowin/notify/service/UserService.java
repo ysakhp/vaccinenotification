@@ -8,8 +8,8 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cowin.notify.UserRepository;
 import com.cowin.notify.model.User;
+import com.cowin.notify.repository.UserRepository;
 
 @Service
 public class UserService {

@@ -20,8 +20,6 @@ import com.cowin.notify.model.CenterList;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
-
 @Service
 public class CowinRequestBuilder {
 
@@ -29,35 +27,24 @@ public class CowinRequestBuilder {
 
 	private static final String COWIN_API_URL = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?";
 
-	public List<Center> getCowinDetails(Integer pincode,String date) throws IOException, InterruptedException {
-		
-		log.info("GEtting Cowin details");
-		
-		
-		
+	public List<Center> getCowinDetails(Integer pincode, String date) throws IOException, InterruptedException {
+
+		log.info("Getting Cowin details from COWIN API ");
+
 		HttpClient client = HttpClient.newHttpClient();
-		HttpRequest request = HttpRequest.newBuilder()
-				.header("accept","application/json" )
-				.GET()
-				.uri(URI.create(COWIN_API_URL+"pincode="+pincode+"&date="+date))
-				.build();
-		
+		HttpRequest request = HttpRequest.newBuilder().header("accept", "application/json").GET()
+				.uri(URI.create(COWIN_API_URL + "pincode=" + pincode + "&date=" + date)).build();
+
 		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-		
-		log.info(COWIN_API_URL+"pincode="+pincode+"&date"+date+response.body().toString());
-		
-		
-		
-		
+
+		log.info(COWIN_API_URL + "pincode=" + pincode + "&date=" + date + response.body().toString());
+
 		ObjectMapper mapper = new ObjectMapper();
-		
+
 		CenterList centerList = mapper.readValue(response.body(), CenterList.class);
-		
-		
-		log.info("Center List "+centerList);
-		
-		
-				
+
+		log.info("Center List " + centerList);
+
 		return centerList.getCenters();
 	}
 

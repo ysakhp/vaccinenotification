@@ -29,7 +29,7 @@ public class RestAPIWorker implements Runnable {
 
 	@Autowired
 	private RestRequestBuilder restRequestBuilder;
-	
+
 	@Autowired
 	private CowinRequestBuilder cowinRequestBuilder;
 
@@ -42,6 +42,7 @@ public class RestAPIWorker implements Runnable {
 		log.info("Rest API Worker thread start.");
 
 		users.parallelStream().forEach(user -> {
+			log.info("User :" + user);
 			getCowinDetails(user);
 
 		});
@@ -60,43 +61,39 @@ public class RestAPIWorker implements Runnable {
 
 		synchronized (user) {
 
-			log.info("Getting cowin details  for " + user);
+			log.info("Getting cowin details  for " + user.getEmail() + " ID : " + user.getId());
 
 			String date = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH).format(LocalDateTime.now())
 					.toString();
 
 			try {
 				cowinRequestBuilder.getCowinDetails(user.getPincode(), date).stream().forEach(center -> {
-					log.info("Fetched cowin details going to check vaccine available  "
-							+ user.getPincode() + " center +" + center.getName());
+					log.info("Fetched cowin details going to check vaccine available  " + user.getPincode()
+							+ " center +" + center.getName());
 					center.getSessions().stream().filter(session -> session.getAvailable_capacity() > 0)
 							.forEach(session -> {
 
-								log.info("Filtered Session by avaliable capacity for center " + center.getName() + " on "
-										+ session.getDate());
-
-								log.info("Going to send mail");
-
+							
+								log.info("Going to send mail :"+user.getEmail()+" "+center.getName()
+								+ " on " + session.getDate());
 								emailService.buildContent(user, center, session).notifyUser();
-								log.info("Email Sent" + user.getEmail());
+								log.info("Email Sent " + user.getEmail());
 								user.setEmailSent(true);
 
 							});
 
 				});
+
 				
-				
-				if (user.isEmailSent()) {
-					log.info("Removed User " + user);
-					users.remove(user);
-				}
+				  if (user.isEmailSent()) { log.info("Removed User " + user.getEmail());
+				  users.remove(user); }
+				 
 			} catch (IOException | InterruptedException e) {
-				log.info("Exception occured "+e.getMessage());
+				log.info("Exception occured " + e.getMessage());
 				e.printStackTrace();
 			}
 		}
 
-		
 	}
 
 }
