@@ -1,5 +1,8 @@
 package com.cowin.notify.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Session {
 	String session_id;
 	int min_age_limit;

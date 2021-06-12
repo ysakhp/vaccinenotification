@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cowin.notify.builder.RestRequestBuilder;
-import com.cowin.notify.builder.WebClientRequestBuilder;
+import com.cowin.notify.builder.CowinRequestBuilder;
 import com.cowin.notify.model.Center;
 import com.cowin.notify.model.User;
 import com.cowin.notify.service.UserService;
@@ -29,7 +29,7 @@ public class UserController {
 	UserService userService;
 	
 	@Autowired
-	WebClientRequestBuilder we;
+	CowinRequestBuilder we;
 	
 	@PostMapping("/")
 	public User addUser(@RequestBody User user) {
