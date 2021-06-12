@@ -34,18 +34,6 @@ public class UserWorker implements Callable {
 		return users;
 	}
 
-	/*
-	 * @Override public void run() {
-	 * log.info("User Data Fetching start in USer Worker"); Vector<User> users = new
-	 * Vector<User>(userService.getUsers());
-	 * 
-	 * log.info("Users"+users); synchronized (users) {
-	 * restAPIWorker.setUsers(users); Thread t2 = new Thread(restAPIWorker);
-	 * t2.setName("Rest Thread"); t2.start(); }
-	 * 
-	 * 
-	 * 
-	 * }
-	 */
+	
 
 }

@@ -40,12 +40,13 @@ public class RestAPIWorker implements Runnable {
 	public synchronized void run() {
 
 		log.info("Rest API Worker thread start.");
+		synchronized (users) {
+			users.parallelStream().forEach(user -> {
+				log.info("User :" + user);
+				getCowinDetails(user);
 
-		users.parallelStream().forEach(user -> {
-			log.info("User :" + user);
-			getCowinDetails(user);
-
-		});
+			});
+		}
 
 		log.info("Rest API Worker thread ends.");
 
@@ -73,21 +74,22 @@ public class RestAPIWorker implements Runnable {
 					center.getSessions().stream().filter(session -> session.getAvailable_capacity() > 0)
 							.forEach(session -> {
 
-							
-								log.info("Going to send mail :"+user.getEmail()+" "+center.getName()
-								+ " on " + session.getDate());
+								log.info("Going to send mail :" + user.getEmail() + " " + center.getName() + " on "
+										+ session.getDate());
 								emailService.buildContent(user, center, session).notifyUser();
-								log.info("Email Sent " + user.getEmail());
+								log.error("Email Sent " + user.getEmail() + " Pin : " + user.getPincode() + "Place : "
+										+ center.getName());
 								user.setEmailSent(true);
 
 							});
 
 				});
 
-				
-				  if (user.isEmailSent()) { log.info("Removed User " + user.getEmail());
-				  users.remove(user); }
-				 
+				if (user.isEmailSent()) {
+					log.info("Removed User " + user.getEmail());
+					users.remove(user);
+				}
+
 			} catch (IOException | InterruptedException e) {
 				log.info("Exception occured " + e.getMessage());
 				e.printStackTrace();

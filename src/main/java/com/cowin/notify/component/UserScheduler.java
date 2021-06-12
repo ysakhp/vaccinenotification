@@ -61,7 +61,7 @@ public class UserScheduler {
 		}
 	}
 
-	@Scheduled(fixedDelay = 1000 * 15)
+	@Scheduled(initialDelay = 1000 * 30, fixedDelay = 1000 * 15)
 	public void scheduleResAPICallForUser() {
 
 		log.info("External Cowin Rest API CALL Scheduler starts. ");
