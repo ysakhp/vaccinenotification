@@ -29,7 +29,7 @@ public class CowinRequestBuilder {
 
 	private static final String COWIN_API_URL = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?";
 
-	public CenterList getCowinDetails(Integer pincode,String date) throws IOException, InterruptedException {
+	public List<Center> getCowinDetails(Integer pincode,String date) throws IOException, InterruptedException {
 		
 		log.info("GEtting Cowin details");
 		
@@ -46,15 +46,19 @@ public class CowinRequestBuilder {
 		
 		log.info(COWIN_API_URL+"pincode="+pincode+"&date"+date+response.body().toString());
 		
+		
+		
+		
 		ObjectMapper mapper = new ObjectMapper();
-		CenterList centerList = mapper.readValue(response.body(), new TypeReference<CenterList>() {
-		});
+		
+		CenterList centerList = mapper.readValue(response.body(), CenterList.class);
+		
 		
 		log.info("Center List "+centerList);
 		
 		
 				
-		return centerList;
+		return centerList.getCenters();
 	}
 
 }

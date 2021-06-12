@@ -66,7 +66,7 @@ public class RestAPIWorker implements Runnable {
 					.toString();
 
 			try {
-				cowinRequestBuilder.getCowinDetails(user.getPincode(), date).getCenters().stream().forEach(center -> {
+				cowinRequestBuilder.getCowinDetails(user.getPincode(), date).stream().forEach(center -> {
 					log.info("Fetched cowin details going to check vaccine available  "
 							+ user.getPincode() + " center +" + center.getName());
 					center.getSessions().stream().filter(session -> session.getAvailable_capacity() > 0)
