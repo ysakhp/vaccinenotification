@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hibernate.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +23,8 @@ import com.cowin.notify.service.UserService;
 import reactor.core.publisher.Flux;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("api/users")
+@CrossOrigin
 public class UserController {
 	
 	@Autowired
@@ -31,17 +33,17 @@ public class UserController {
 	@Autowired
 	CowinRequestBuilder we;
 	
-	@PostMapping("/")
+	@PostMapping(value = {"/",""})
 	public User addUser(@RequestBody User user) {
 		return userService.saveUser(user);
 	}
 	
-	@GetMapping("/")
+	@GetMapping(value = {"/",""})
 	public List<User> getUsers( ) {
 		return userService.getUsers();
 	}
 	
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/deleteUser/{id}")
 	public void deleteUser(@PathVariable(value = "id") Integer userId ) {
 		userService.deleteUser(userId);
 	}
