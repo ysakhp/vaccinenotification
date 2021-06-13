@@ -38,7 +38,7 @@ public class UserScheduler {
 
 	Logger log = LoggerFactory.getLogger(UserScheduler.class);
 
-	@Scheduled(initialDelay = 500, fixedDelay = 1000 * 60 * 60)
+	@Scheduled(initialDelay = 500, fixedDelay = 1000 * 60 * 8)
 	public synchronized void scheduleGetUsers() {
 		log.info("User scheduler start");
 		Future userFuture = executorService.submit(userWorker);
