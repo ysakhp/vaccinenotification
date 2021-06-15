@@ -36,4 +36,17 @@ public class UserService {
 		userRepository.deleteById(userId);
 		;
 	}
+
+	@Transactional
+	public void deleteUserByEmail(String email) {
+		userRepository.findAll().stream().filter(user -> user.getEmail().equalsIgnoreCase(email)).forEach(user -> {
+			deleteUser(user.getId());
+		});
+	}
+
+	@Transactional
+	public void updateUser(User user) {
+		userRepository.save(user);
+		
+	}
 }

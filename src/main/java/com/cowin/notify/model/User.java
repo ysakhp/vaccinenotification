@@ -22,6 +22,10 @@ public class User {
 	int pincode;
 	
 	boolean emailSent = false;
+	
+	int emailCount = 0;
+	
+	String emailSendDate = "";
 
 	public User() {
 
@@ -102,5 +106,22 @@ public class User {
 		this.emailSent = emailSent;
 	}
 
+	public int getEmailCount() {
+		return emailCount;
+	}
+
+	public void setEmailCount(int emailCount) {
+		this.emailCount = emailCount;
+	}
+
+	public String getEmailSendDate() {
+		return emailSendDate;
+	}
+
+	public void setEmailSendDate(String emailSendDate) {
+		this.emailSendDate = emailSendDate;
+	}
+
+	
 	
 }

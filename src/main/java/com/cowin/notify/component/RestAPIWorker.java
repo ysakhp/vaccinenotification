@@ -18,6 +18,7 @@ import com.cowin.notify.builder.CowinRequestBuilder;
 import com.cowin.notify.builder.RestRequestBuilder;
 import com.cowin.notify.model.User;
 import com.cowin.notify.service.EmailService;
+import com.cowin.notify.service.UserService;
 import com.sun.jdi.connect.Connector.BooleanArgument;
 
 @Component
@@ -36,12 +37,15 @@ public class RestAPIWorker implements Runnable {
 	@Autowired
 	EmailService emailService;
 
+	@Autowired
+	UserService userService;
+
 	@Override
 	public synchronized void run() {
 
 		log.info("Rest API Worker thread start.");
 		synchronized (users) {
-			users.parallelStream().forEach(user -> {
+			users.stream().forEach(user -> {
 				log.info("User :" + user);
 				getCowinDetails(user);
 
@@ -71,14 +75,17 @@ public class RestAPIWorker implements Runnable {
 				cowinRequestBuilder.getCowinDetails(user.getPincode(), date).stream().forEach(center -> {
 					log.info("Fetched cowin details going to check vaccine available  " + user.getPincode()
 							+ " center +" + center.getName());
-					center.getSessions().stream().filter(session -> session.getAvailable_capacity() > 0)
+					center.getSessions().stream()
+							.filter(session -> session.getAvailable_capacity() > 0 && (user.getEmailSendDate() == null
+									|| user.getEmailSendDate().equals(date) || user.getEmailSendDate().isEmpty()))
 							.forEach(session -> {
 
 								log.info("Going to send mail :" + user.getEmail() + " " + center.getName() + " on "
 										+ session.getDate());
 								emailService.buildContent(user, center, session).notifyUser();
-								log.error("Email Sent " + user.getEmail() + " Pin : " + user.getPincode() + "Place : "
-										+ center.getName());
+								log.error("ID " + user.getId() + " Email Sent " + user.getEmail() + " Pin : "
+										+ user.getPincode() + "Place : " + center.getName());
+
 								user.setEmailSent(true);
 
 							});
@@ -86,8 +93,29 @@ public class RestAPIWorker implements Runnable {
 				});
 
 				if (user.isEmailSent()) {
-					log.info("Removed User " + user.getEmail());
-					users.remove(user);
+
+					log.info("Email sent count increase " + user.getEmailCount());
+					user.setEmailCount(user.getEmailCount() + 1);
+
+					if (user.getEmailCount() == 20) {
+						String nextDate = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
+								.format(LocalDateTime.now().plusDays(1)).toString();
+						/*if (!user.getEmail().equals("ysakhpr@gmail.com")) {
+							log.info("Omit ysakh");
+							user.setEmailSendDate(nextDate);
+						}*/
+						user.setEmailSendDate(nextDate);
+						user.setEmailCount(0);
+						user.setEmailSent(false);
+
+						log.info("User email sending details setting default");
+						log.info("Removed User " + user.getEmail());
+//						users.remove(user);
+
+					}
+					log.info("Updating user after sending mail");
+					userService.updateUser(user);
+
 				}
 
 			} catch (IOException | InterruptedException e) {

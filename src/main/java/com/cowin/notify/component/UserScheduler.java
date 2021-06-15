@@ -38,7 +38,7 @@ public class UserScheduler {
 
 	Logger log = LoggerFactory.getLogger(UserScheduler.class);
 
-	@Scheduled(initialDelay = 500, fixedDelay = 1000 * 60 * 8)
+	@Scheduled(initialDelay = 500, fixedDelay = 1000 * 60 * 30)
 	public synchronized void scheduleGetUsers() {
 		log.info("User scheduler start");
 		Future userFuture = executorService.submit(userWorker);
@@ -61,13 +61,13 @@ public class UserScheduler {
 		}
 	}
 
-	@Scheduled(initialDelay = 1000 * 30, fixedDelay = 1000 * 15)
+	@Scheduled(initialDelay = 1000 * 15, fixedDelay = 1000 * 60 * 2 )
 	public void scheduleResAPICallForUser() {
 
 		log.info("External Cowin Rest API CALL Scheduler starts. ");
 
 		Future restAPIFuture = executorService.submit(restAPIWorker);
-
+		
 		log.info("External Cowin Rest API CALL Scheduler ends. ");
 
 	}
