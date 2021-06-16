@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cowin.notify.builder.RestRequestBuilder;
 import com.cowin.notify.builder.CowinRequestBuilder;
 import com.cowin.notify.model.Center;
+import com.cowin.notify.model.MemoryStats;
 import com.cowin.notify.model.User;
+import com.cowin.notify.service.MemoryService;
 import com.cowin.notify.service.UserService;
 import com.mysql.cj.log.Log;
 
@@ -40,6 +42,9 @@ public class UserController {
 	@Autowired
 	CowinRequestBuilder we;
 	
+	@Autowired
+	MemoryService memoryService;
+	
 	@PostMapping(value = {"/",""})
 	public User addUser(@RequestBody User user) {
 		return userService.saveUser(user);
@@ -56,8 +61,9 @@ public class UserController {
 	}
 
 	@GetMapping("/check")
-	public Boolean checkRest() throws IOException, InterruptedException {
-		we.getCowinDetails(690107, "12-06-2021");
+	public Boolean checkRest(@RequestParam( required = false,name="pin") Integer pin,
+			@RequestParam(required = false, name = "date") String dat) throws IOException, InterruptedException {
+		we.getCowinDetails(pin, dat);
 		 return true;
 	}
 	
@@ -72,6 +78,11 @@ public class UserController {
 	public void resetEmail(@PathVariable(value = "id") Integer userId ) {
 		log.info("Resetting email setting for ID "+userId);
 		userService.reserEmailSettings(userId);
+	}
+	
+	@GetMapping("memory-status")
+	public MemoryStats getMemoryStatistics() {
+		return memoryService.getMemoryStatus();
 	}
 	
 }

@@ -78,7 +78,7 @@ public class RestAPIWorker implements Runnable {
 					log.info("Fetched cowin details going to check vaccine available  " + user.getPincode()
 							+ " center +" + center.getName());
 					center.getSessions().stream()
-							.filter(session -> session.getAvailable_capacity() > 0 && (user.getEmailSendDate() == null
+							.filter(session -> (session.getAvailable_capacity() > 0 && session.getMin_age_limit() == user.getAgeGroup())&& (user.getEmailSendDate() == null
 									|| user.getEmailSendDate().equals(date) || user.getEmailSendDate().isEmpty()))
 							.forEach(session -> {
 

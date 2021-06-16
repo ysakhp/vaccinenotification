@@ -63,6 +63,24 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+
+				<executions>
+					<execution>
+						<configuration>
+							<mainClass>com.cowin.notify.VaccinenotificationApplication</mainClass>
+						</configuration>
+					</execution>
+				</executions>
+
+				
+				<configuration>
+				<executable>true</executable>
+					<jvmArguments>
+						-Xms128m
+						-Xmx512m
+					</jvmArguments>
+				</configuration>
+
 			</plugin>
 		</plugins>
 	</build>

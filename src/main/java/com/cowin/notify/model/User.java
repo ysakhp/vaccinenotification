@@ -21,6 +21,9 @@ public class User {
 	@Column(name = "pincode")
 	int pincode;
 	
+	@Column(name ="ageGroup")
+	int ageGroup;
+	
 	boolean emailSent = false;
 	
 	int emailCount = 0;
@@ -86,17 +89,19 @@ public class User {
 		this.emailSendDate = emailSendDate;
 	}
 
-	
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", email=" + email + ", pincode=" + pincode + ", emailSent=" + emailSent
-				+ ", emailCount=" + emailCount + ", emailSendDate=" + emailSendDate + "]";
+	public int getAgeGroup() {
+		return ageGroup;
+	}
+
+	public void setAgeGroup(int ageGroup) {
+		this.ageGroup = ageGroup;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ageGroup;
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + emailCount;
 		result = prime * result + ((emailSendDate == null) ? 0 : emailSendDate.hashCode());
@@ -115,6 +120,8 @@ public class User {
 		if (getClass() != obj.getClass())
 			return false;
 		User other = (User) obj;
+		if (ageGroup != other.ageGroup)
+			return false;
 		if (email == null) {
 			if (other.email != null)
 				return false;
@@ -136,6 +143,14 @@ public class User {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", email=" + email + ", pincode=" + pincode + ", ageGroup=" + ageGroup
+				+ ", emailSent=" + emailSent + ", emailCount=" + emailCount + ", emailSendDate=" + emailSendDate + "]";
+	}
+
+	
+	
 	
 	
 }

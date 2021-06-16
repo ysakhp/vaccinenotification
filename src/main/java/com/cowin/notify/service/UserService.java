@@ -22,6 +22,7 @@ public class UserService {
 
 	@Transactional
 	public User saveUser(User user) {
+		log.info("Saving User "+user);
 		return userRepository.save(user);
 	}
 
