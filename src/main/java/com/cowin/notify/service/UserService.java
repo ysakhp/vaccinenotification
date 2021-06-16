@@ -49,4 +49,17 @@ public class UserService {
 		userRepository.save(user);
 		
 	}
+
+	@Transactional
+	public void reserEmailSettings(Integer userId) {
+		if(userRepository.findById(userId).isPresent()) {
+		User user = userRepository.findById(userId).get();
+		user.setEmailCount(0);
+		user.setEmailSent(false);
+		user.setEmailSendDate("");
+		userRepository.save(user);
+		log.info("User "+user);
+		}
+		
+	}
 }

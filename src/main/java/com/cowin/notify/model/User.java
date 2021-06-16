@@ -62,42 +62,6 @@ public class User {
 		this.pincode = pincode;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		result = prime * result + id;
-		result = prime * result + pincode;
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		User other = (User) obj;
-		if (email == null) {
-			if (other.email != null)
-				return false;
-		} else if (!email.equals(other.email))
-			return false;
-		if (id != other.id)
-			return false;
-		if (pincode != other.pincode)
-			return false;
-		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", email=" + email + ", pincode=" + pincode + "]";
-	}
-
 	public boolean isEmailSent() {
 		return emailSent;
 	}
@@ -120,6 +84,56 @@ public class User {
 
 	public void setEmailSendDate(String emailSendDate) {
 		this.emailSendDate = emailSendDate;
+	}
+
+	
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", email=" + email + ", pincode=" + pincode + ", emailSent=" + emailSent
+				+ ", emailCount=" + emailCount + ", emailSendDate=" + emailSendDate + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result + emailCount;
+		result = prime * result + ((emailSendDate == null) ? 0 : emailSendDate.hashCode());
+		result = prime * result + (emailSent ? 1231 : 1237);
+		result = prime * result + id;
+		result = prime * result + pincode;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		User other = (User) obj;
+		if (email == null) {
+			if (other.email != null)
+				return false;
+		} else if (!email.equals(other.email))
+			return false;
+		if (emailCount != other.emailCount)
+			return false;
+		if (emailSendDate == null) {
+			if (other.emailSendDate != null)
+				return false;
+		} else if (!emailSendDate.equals(other.emailSendDate))
+			return false;
+		if (emailSent != other.emailSent)
+			return false;
+		if (id != other.id)
+			return false;
+		if (pincode != other.pincode)
+			return false;
+		return true;
 	}
 
 	
