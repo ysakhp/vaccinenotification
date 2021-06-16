@@ -12,7 +12,7 @@ public class MemoryService {
 		memStats.setHeapFreeSize(Runtime.getRuntime().freeMemory());
 		memStats.setHeapMaxSize(Runtime.getRuntime().maxMemory());
 		memStats.setHeapSize(Runtime.getRuntime().totalMemory());
-		memStats.setHeapFreeSize(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
+		memStats.setUsedMemory(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory());
 		return memStats;
 	}
 	

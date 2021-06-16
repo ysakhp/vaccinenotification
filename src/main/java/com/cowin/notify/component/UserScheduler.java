@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import com.cowin.notify.model.User;
@@ -23,7 +24,7 @@ import com.cowin.notify.service.UserService;
 public class UserScheduler {
 
 	@Autowired
-	ExecutorService executorService;
+	ThreadPoolTaskExecutor executorService;
 
 	@Autowired
 	RestAPIWorker restAPIWorker;
@@ -64,11 +65,14 @@ public class UserScheduler {
 	@Scheduled(initialDelay = 1000 * 15, fixedDelay = 1000 * 60 * 2 )
 	public void scheduleResAPICallForUser() {
 
+		System.gc();
+		
 		log.info("External Cowin Rest API CALL Scheduler starts. ");
 
 		executorService.submit(restAPIWorker);
 		
 		log.info("External Cowin Rest API CALL Scheduler ends. ");
+		
 		
 		System.gc();
 

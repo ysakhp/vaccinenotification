@@ -19,7 +19,7 @@ public class ThreadPoolConfiguration {
 		threadPoolTaskExecutor.setCorePoolSize(3);
 		threadPoolTaskExecutor.setMaxPoolSize(8);
 		threadPoolTaskExecutor.setQueueCapacity(500);
-		threadPoolTaskExecutor.setThreadNamePrefix("Executor");
+		threadPoolTaskExecutor.setThreadNamePrefix("TaskExecutor");
 		threadPoolTaskExecutor.setWaitForTasksToCompleteOnShutdown(true);
 		threadPoolTaskExecutor.initialize();
 		return threadPoolTaskExecutor;
