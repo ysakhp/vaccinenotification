@@ -39,6 +39,8 @@ public class RestAPIWorker implements Runnable {
 
 	@Autowired
 	UserService userService;
+	
+	private boolean isEmailSentForUser = false;
 
 	@Override
 	public synchronized void run() {
@@ -87,12 +89,13 @@ public class RestAPIWorker implements Runnable {
 										+ user.getPincode() + "Place : " + center.getName());
 
 								user.setEmailSent(true);
+								isEmailSentForUser = true;
 
 							});
 
 				});
 
-				if (user.isEmailSent()) {
+				if (isEmailSentForUser) {
 
 					log.info("Email sent count increase " + user.getEmailCount());
 					user.setEmailCount(user.getEmailCount() + 1);
@@ -115,7 +118,7 @@ public class RestAPIWorker implements Runnable {
 					}
 					log.info("Updating user after sending mail");
 					userService.updateUser(user);
-
+					isEmailSentForUser = false;
 				}
 
 			} catch (IOException | InterruptedException e) {
