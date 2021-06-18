@@ -1,7 +1,15 @@
 package com.cowin.notify.controller;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.hibernate.annotations.Parameter;
 import org.slf4j.Logger;
@@ -33,56 +41,57 @@ import reactor.core.publisher.Flux;
 @RequestMapping("api/users")
 @CrossOrigin
 public class UserController {
-	
+
 	Logger log = LoggerFactory.getLogger(UserController.class);
-	
+
 	@Autowired
 	UserService userService;
-	
+
 	@Autowired
 	CowinRequestBuilder we;
-	
+
 	@Autowired
 	MemoryService memoryService;
-	
-	@PostMapping(value = {"/",""})
+
+	@PostMapping(value = { "/", "" })
 	public User addUser(@RequestBody User user) {
 		return userService.saveUser(user);
 	}
-	
-	@GetMapping(value = {"/",""})
-	public List<User> getUsers( ) {
+
+	@GetMapping(value = { "/", "" })
+	public List<User> getUsers() {
 		return userService.getUsers();
 	}
-	
+
 	@DeleteMapping("/deleteUser/{id}")
-	public void deleteUserById(@PathVariable(value = "id") Integer userId ) {
+	public void deleteUserById(@PathVariable(value = "id") Integer userId) {
 		userService.deleteUser(userId);
 	}
 
 	@GetMapping("/check")
-	public Boolean checkRest(@RequestParam( required = false,name="pin") Integer pin,
+	public Boolean checkRest(@RequestParam(required = false, name = "pin") Integer pin,
 			@RequestParam(required = false, name = "date") String dat) throws IOException, InterruptedException {
 		we.getCowinDetails(pin, dat);
-		 return true;
+		return true;
 	}
-	
-	//http://localhost:8081/api/users/deleteByMailID?email=ysakhpr@gmail.com
+
+	// http://localhost:8081/api/users/deleteByMailID?email=ysakhpr@gmail.com
 	@DeleteMapping("/deleteByMailID")
 	public void deleteUserByEmail(@RequestParam(required = false, name = "email") String email) {
 		log.info("Delte by mail Id");
 		userService.deleteUserByEmail(email);
 	}
-	
+
 	@PutMapping("resetEmailSetting/{id}")
-	public void resetEmail(@PathVariable(value = "id") Integer userId ) {
-		log.info("Resetting email setting for ID "+userId);
+	public void resetEmail(@PathVariable(value = "id") Integer userId) {
+		log.info("Resetting email setting for ID " + userId);
 		userService.reserEmailSettings(userId);
 	}
-	
+
 	@GetMapping("memory-status")
-	public MemoryStats getMemoryStatistics() {
+	public MemoryStats getMemoryStatistics() throws ParseException {
+
 		return memoryService.getMemoryStatus();
 	}
-	
+
 }

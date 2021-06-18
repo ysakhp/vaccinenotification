@@ -1,8 +1,12 @@
 package com.cowin.notify.component;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
@@ -16,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 import com.cowin.notify.builder.CowinRequestBuilder;
 import com.cowin.notify.builder.RestRequestBuilder;
+import com.cowin.notify.dao.UserDaoImpl;
 import com.cowin.notify.model.User;
 import com.cowin.notify.service.EmailService;
 import com.cowin.notify.service.UserService;
@@ -39,8 +44,14 @@ public class RestAPIWorker implements Runnable {
 
 	@Autowired
 	UserService userService;
-	
+
 	private boolean isEmailSentForUser = false;
+
+	private static final ZoneId zoneId = ZoneId.of("Asia/Kolkata");
+
+	private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
+
+	private Date userDate = null;
 
 	@Override
 	public synchronized void run() {
@@ -70,16 +81,30 @@ public class RestAPIWorker implements Runnable {
 
 			log.info("Getting cowin details  for " + user.getEmail() + " ID : " + user.getId());
 
-			String date = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH).format(LocalDateTime.now())
-					.toString();
+			String date = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
+					.format(LocalDateTime.now().atZone(zoneId)).toString();
 
 			try {
+
+				// To check the conditions
+				if (!user.getEmailSendDate().isEmpty()) {
+					userDate = simpleDateFormat.parse(user.getEmailSendDate());
+				} else {
+					userDate = simpleDateFormat.parse(DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
+							.format(LocalDateTime.now().atZone(zoneId).plusDays(1)).toString());
+				}
+
+				Date presentDate = simpleDateFormat.parse(date);
+
 				cowinRequestBuilder.getCowinDetails(user.getPincode(), date).stream().forEach(center -> {
 					log.info("Fetched cowin details going to check vaccine available  " + user.getPincode()
 							+ " center +" + center.getName());
+					log.info("User Date " + userDate + " Today date " + presentDate);
 					center.getSessions().stream()
-							.filter(session -> (session.getAvailable_capacity() > 0 && session.getMin_age_limit() == user.getAgeGroup())&& (user.getEmailSendDate() == null
-									|| user.getEmailSendDate().equals(date) || user.getEmailSendDate().isEmpty()))
+							.filter(session -> (session.getAvailable_capacity() > 0
+									&& session.getMin_age_limit() == user.getAgeGroup())
+									&& (user.getEmailSendDate() == null || userDate.equals(presentDate)
+											|| userDate.before(presentDate) || user.getEmailSendDate().isEmpty()))
 							.forEach(session -> {
 
 								log.info("Going to send mail :" + user.getEmail() + " " + center.getName() + " on "
@@ -102,11 +127,11 @@ public class RestAPIWorker implements Runnable {
 
 					if (user.getEmailCount() == 20) {
 						String nextDate = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
-								.format(LocalDateTime.now().plusDays(1)).toString();
-						/*if (!user.getEmail().equals("ysakhpr@gmail.com")) {
-							log.info("Omit ysakh");
-							user.setEmailSendDate(nextDate);
-						}*/
+								.format(LocalDateTime.now().atZone(zoneId).plusDays(1)).toString();
+						/*
+						 * if (!user.getEmail().equals("ysakhpr@gmail.com")) { log.info("Omit ysakh");
+						 * user.setEmailSendDate(nextDate); }
+						 */
 						user.setEmailSendDate(nextDate);
 						user.setEmailCount(0);
 						user.setEmailSent(false);
@@ -121,7 +146,7 @@ public class RestAPIWorker implements Runnable {
 					isEmailSentForUser = false;
 				}
 
-			} catch (IOException | InterruptedException e) {
+			} catch (IOException | InterruptedException | ParseException e) {
 				log.info("Exception occured " + e.getMessage());
 				e.printStackTrace();
 			}
